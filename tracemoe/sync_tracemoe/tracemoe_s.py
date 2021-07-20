@@ -1,22 +1,19 @@
 from __future__ import annotations
 
-import json
-import re
-import urllib
 from typing import Optional, Union
 
 import requests
 
 from ..sync_tracemoe_errors import (
-    InvalidURL,
-    TraceMoeError,
-    Ratelimited,
-    ConcurrencyOrRatelimit,
-    HTTPConnectionError,
-    InvalidAPIKey
+    InvalidURL, 
+    Ratelimited, 
+    ConcurrencyOrRatelimit, 
+    HTTPConnectionError, 
+    InvalidAPIKey,
 )
-from ..tracemoe_response import TraceMoeResponse
 
+from ..tracemoe_response import TraceMoeResponse
+# Lines 7 and 9 dont work, fix later.
 
 class TraceMoe:
 
@@ -33,7 +30,7 @@ class TraceMoe:
         self, url:str, *, 
         anilist_id:Optional[int]=None, 
         cut_borders:Optional[bool]=False,
-    ) -> TraceMoeResponse: # Add api token stuff later
+    ) -> TraceMoeResponse:
         base_url = "https://api.trace.moe/search?"
 
         if anilist_id is not None:
@@ -44,47 +41,35 @@ class TraceMoe:
             base_url+=check
         
         base_url+=f"url={url}"
-        if self.token:
-            base_url+=f"&key={self.token}"
         
-        response = requests.get(base_url)
+        headers:Union[dict[str, str], dict[str, None]] = {"x-trace-key":self.token} if self.token is not None else {"x-trace-key":None}
+        response = requests.get(base_url, headers=headers)
 
-        if response.ok:
+        if response.status_code in range(200,300):
             return TraceMoeResponse(response.json())
         else:
-            try:
-                raise self._error_dict[response.status_code]()
-            except KeyError:
-                raise HTTPConnectionError(f"{response.status_code}: {response.reason}")
+            raise self._error_dict.get(response.status_code, HTTPConnectionError(f"{response.status_code}: {response.reason}"))
 
     @property
-    def me(self) -> dict: # Add API key stuff later
+    def me(self) -> dict:
         base_url = "https://api.trace.moe/me"
         
-        if self.token:
-            base_url+=f"?key={self.token}"
-        resp = requests.get(base_url)
+        headers:Union[dict[str, str], dict[str, None]] = {"x-trace-key":self.token} if self.token is not None else {"x-trace-key":None}
 
-        if resp.ok:
+        resp = requests.get(base_url, headers=headers)
+
+        if resp.status_code in range(200,300):
             return resp.json()
         else:
-            try:
-                raise self._error_dict[resp.status_code]()
-            except KeyError:
-                raise HTTPConnectionError(f"{resp.status_code}: {resp.reason}")
+            raise self._error_dict.get(resp.status_code, HTTPConnectionError(f"{resp.status_code}: {resp.reason}"))
 
-    def image_upload(self, *, e_file:str) -> TraceMoeResponse: # Add API key stuff later
+    def image_upload(self, *, e_file:str) -> TraceMoeResponse:
         base_url = "https://api.trace.moe/search"
 
-        r = requests.post(
-            base_url, files={
-            "image":open(e_file, "rb")
-        }
-    )
-        if r.ok:
+        headers:Union[dict[str, str], dict[str, None]] = {"x-trace-key":self.token} if self.token is not None else {"x-trace-key":None}
+
+        r = requests.post(base_url, files={"image":open(e_file, "rb")}, headers=headers)
+        if r.status_code in range(200,300):
             return TraceMoeResponse(r.json())
         else:
-            try:
-                raise self._error_dict[r.status_code]()
-            except KeyError:
-                raise HTTPConnectionError(f"{r.status_code}: {r.reason}")
+            raise self._error_dict.get(r.status_code, HTTPConnectionError(f"{r.status_code}: {r.reason}"))
