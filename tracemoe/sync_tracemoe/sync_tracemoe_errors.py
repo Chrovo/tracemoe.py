@@ -11,8 +11,5 @@ class Ratelimited(TraceMoeError):
 class ConcurrencyOrRatelimit(TraceMoeError):
     pass
 
-class HTTPConnectionError(TraceMoeError):
-    pass
-
 class InvalidAPIKey(TraceMoeError):
     pass

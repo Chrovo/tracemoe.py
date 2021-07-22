@@ -4,16 +4,15 @@ from typing import Optional, Union
 
 import requests
 
-from ..sync_tracemoe_errors import (
+from sync_tracemoe_errors import (
     InvalidURL, 
     Ratelimited, 
     ConcurrencyOrRatelimit, 
-    HTTPConnectionError, 
     InvalidAPIKey,
 )
 
-from ..tracemoe_response import TraceMoeResponse
-# Lines 7 and 9 dont work, fix later.
+from tracemoe_response import TraceMoeResponse
+
 
 class TraceMoe:
 
@@ -48,7 +47,7 @@ class TraceMoe:
         if response.status_code in range(200,300):
             return TraceMoeResponse(response.json())
         else:
-            raise self._error_dict.get(response.status_code, HTTPConnectionError(f"{response.status_code}: {response.reason}"))
+            raise self._error_dict.get(response.status_code, response.raise_for_status())
 
     @property
     def me(self) -> dict:
@@ -61,7 +60,7 @@ class TraceMoe:
         if resp.status_code in range(200,300):
             return resp.json()
         else:
-            raise self._error_dict.get(resp.status_code, HTTPConnectionError(f"{resp.status_code}: {resp.reason}"))
+            raise self._error_dict.get(resp.status_code, resp.raise_for_status())
 
     def image_upload(self, *, e_file:str) -> TraceMoeResponse:
         base_url = "https://api.trace.moe/search"
@@ -72,4 +71,4 @@ class TraceMoe:
         if r.status_code in range(200,300):
             return TraceMoeResponse(r.json())
         else:
-            raise self._error_dict.get(r.status_code, HTTPConnectionError(f"{r.status_code}: {r.reason}"))
+            raise self._error_dict.get(r.status_code, r.raise_for_status())
