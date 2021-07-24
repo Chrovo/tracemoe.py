@@ -14,7 +14,11 @@ from async_tracemoe_errors import (
 
 class AsyncTraceMoe:
 
-    def __init__(self, *, token:Optional[str]=None, session:Optional[aiohttp.ClientSession]=None) -> None:
+    def __init__(
+        self, *, 
+        token:Optional[str]=None, 
+        session:Optional[aiohttp.ClientSession]=None
+    ) -> None:
         self.token = token
         self._error_dict = {
             429:Ratelimited("To many HTTP requests, you are blocked from accessing the trace.moe api for 60 minutes."),
