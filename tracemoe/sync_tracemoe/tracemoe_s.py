@@ -16,7 +16,7 @@ from tracemoe_response import TraceMoeResponse
 
 class TraceMoe:
 
-    def __init__(self, *, token:Optional[str]) -> None:
+    def __init__(self, *, token:Optional[str]=None) -> None:
         self.token = token
         self._error_dict = {
             429:Ratelimited("To many HTTP requests, you are blocked from accessing the trace.moe api for 60 minutes."),

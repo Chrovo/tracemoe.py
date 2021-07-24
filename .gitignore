@@ -1,1 +1,4 @@
+dist/
+tracemoe.py.egg-info/
+build/
 __pycache__/
