@@ -4,14 +4,14 @@ from typing import Optional, Union
 
 import requests
 
-from sync_tracemoe_errors import (
+from .sync_tracemoe_errors import (
     InvalidURL, 
     Ratelimited, 
     ConcurrencyOrRatelimit, 
     InvalidAPIKey,
 )
 
-from tracemoe_response import TraceMoeResponse
+from .tracemoe_response import TraceMoeResponse
 
 
 class TraceMoe:
