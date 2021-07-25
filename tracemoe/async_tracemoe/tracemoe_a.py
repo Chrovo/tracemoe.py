@@ -4,8 +4,8 @@ import asyncio
 import aiohttp
 from typing import Optional, Union
 
-from async_tracemoe_response import AsyncTraceMoeResponse
-from async_tracemoe_errors import (
+from .async_tracemoe_response import AsyncTraceMoeResponse
+from .async_tracemoe_errors import (
     InvalidURL, 
     Ratelimited, 
     ConcurrencyOrRatelimit, 
