@@ -10,6 +10,6 @@ setup(
         classifiers = ["Intended Audience::Developers", "Programming Language::Python", "Natural Language::English","Programming Languuage::Python::3"],
         install_requires = ['requests','aiohttp'],
         license = "MIT",
-        packages = ["tracemoe"],
-        keywords=["anime", 'tracemoe']
+        packages = ["tracemoe","tracemoe.sync_tracemoe", "tracemoe.async_tracemoe",],
+        keywords=["anime", 'tracemoe'],
 )
